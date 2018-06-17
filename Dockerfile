@@ -2,7 +2,7 @@ FROM alpine:latest
 MAINTAINER conlon
 
 RUN apk -U upgrade && \
-    apk add --no-cache openvpn curl bash && \
+    apk add --no-cache openvpn curl bash jq && \
     #
     #AES256 encryption profiles
     curl -o /openvpn-strong.zip https://www.privateinternetaccess.com/openvpn/openvpn-strong.zip && \
@@ -17,12 +17,19 @@ RUN apk -U upgrade && \
     # rm -rf /tmp && \
     rm /openvpn.zip && \
     rm /openvpn-strong.zip && \
-    rm -rf /var/cache/apk/*
+    rm -rf /var/cache/apk/* && \
+    mkdir /etc/openvpn/pia_portforward_output && \
+    touch /etc/openvpn/pia_portforward_output/port.txt && \
+    chmod -R 777 /etc/openvpn/pia_portforward_output
 
 
 COPY openvpn.sh /usr/local/bin/openvpn.sh
+COPY up.sh /etc/openvpn
+COPY pia_portforward.sh /etc/openvpn
+RUN chmod a+rx /etc/openvpn/*.sh
+
 WORKDIR /etc/openvpn
 
-ENV REGION="US Seattle"
+ENV REGION="France"
 ENTRYPOINT ["openvpn.sh"]
 #ENTRYPOINT ["/bin/bash"]
