@@ -1,9 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-# Try to retrieve port from PIA and parse JSON
-# PORT=$(./pia_portforward.sh | jq -r '.port')
-PORT=$(./pia_portforward.sh | jq -r '.port')
-
-echo Port forwarding on $PORT
-
-echo $PORT > port.txt
+# spawn second script in new process so VPN finsihes connecting
+# Works around issue with PIA API not returning port forward until after connection has completed
+bash up2.sh &
+echo "up finished"

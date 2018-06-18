@@ -38,7 +38,7 @@ version( )
 
 port_forward_assignment( )
 {
-  #echo 'Loading port forward assignment information...'
+  # echo 'Loading port forward assignment information...'
   if [ "$(uname)" == "Linux" ]; then
     client_id=`head -n 100 /dev/urandom | sha256sum | tr -d " -"`
   fi
@@ -47,9 +47,9 @@ port_forward_assignment( )
   fi
 
   json=`curl "http://209.222.18.222:2000/?client_id=$client_id" 2>/dev/null`
-  # if [ "$json" == "" ]; then
-  #   json='Port forwarding is already activated on this connection, has expired, or you are not connected to a PIA region that supports port forwarding'
-  # fi
+   # if [ "$json" == "" ]; then
+   #   json='Port forwarding is already activated on this connection, has expired, or you are not connected to a PIA region that supports port forwarding'
+   # fi
 
   echo $json
 }

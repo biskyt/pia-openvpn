@@ -29,4 +29,7 @@ if [ -n "${LOCAL_NETWORK:-}" ] ; then
 fi
 
 
+# Add up script
+set -- "$@" '--script-security' '2' '--up' '/etc/openvpn/up.sh'
+
 openvpn "$@"

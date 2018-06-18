@@ -25,6 +25,7 @@ RUN apk -U upgrade && \
 
 COPY openvpn.sh /usr/local/bin/openvpn.sh
 COPY up.sh /etc/openvpn
+COPY up2.sh /etc/openvpn
 COPY pia_portforward.sh /etc/openvpn
 RUN chmod a+rx /etc/openvpn/*.sh
 
