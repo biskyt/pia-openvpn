@@ -1,5 +1,5 @@
 FROM alpine:latest
-MAINTAINER conlon
+MAINTAINER biskyt
 
 RUN apk -U upgrade && \
     apk add --no-cache openvpn curl bash jq && \
@@ -27,10 +27,16 @@ COPY openvpn.sh /usr/local/bin/openvpn.sh
 COPY up.sh /etc/openvpn
 COPY up2.sh /etc/openvpn
 COPY pia_portforward.sh /etc/openvpn
+COPY down.sh /etc/openvpn
 RUN chmod a+rx /etc/openvpn/*.sh
 
 WORKDIR /etc/openvpn
 
 ENV REGION="France"
+
+HEALTHCHECK --interval=60s --timeout=15s --start-period=120s \
+    CMD curl -L 'https://api.ipify.org'
+
+VOLUME /portforward
+
 ENTRYPOINT ["openvpn.sh"]
-#ENTRYPOINT ["/bin/bash"]

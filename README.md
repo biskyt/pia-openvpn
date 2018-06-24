@@ -1,12 +1,12 @@
 
-# Private Internet Access OpenVPN Client 
+# Private Internet Access OpenVPN Client
 Private Internet Access docker container
 
-forked from: https://github.com/DeltaAngle/pia-openvpn
+forked from: https://github.com/DeltaAngle/pia-openvpn and: https://github.com/conlon/pia-openvpn
 
 Based on Apline Linux to be tiny!
 
-Kudos to ColinHerbet and swmacdonald for their work
+Kudos to ColinHerbet, swmacdonald and Michael Conlon for their work
 
 # What is Private Internet Access
 Private Internet Access VPN Service encrypts your connection and provides you with an anonymous IP to protect your privacy.
@@ -21,10 +21,10 @@ The goal is to start this container first then run other container within the PI
 ```Shell
 docker run --privileged --cap-add=NET_ADMIN --device=/dev/net/tun --name=pia -d \
   --dns 209.222.18.222 --dns 209.222.18.218 \
-  -e 'REGION=US East' \
+  -e 'REGION=France' \
   -e 'USERNAME=pia_username' \
   -e 'PASSWORD=pia_password' \
-  conlon/pia-openvpn
+  biskyt/pia-openvpn
 ```
 
 Due to the nature of the VPN client, this container must be started with some additional privileges, `--privileged`, `--cap-add=NET_ADMIN` and `--device=/dev/net/tun` make sure that the tunnel can be created from within the container.
@@ -40,6 +40,13 @@ docker run --rm --net=container:pia \
 
 The IP address returned after this execution should be different from the IP address you would get without specifying `--net=container:pia`.
 
+## Port port_forwarding
+This image will automatically ask PIA for a port forward (on compatible servers) and store the port number in /portforward/port.txt.
+
+It is recommended that you create a shared volume (e.g, `docker create volume portforward`), and mount this volume in the container by specifying `-v portforward:/portforward \` in the docker run.
+
+If you mount the same volume in any other container using the PIA VPN, then you can monitor the port.txt file for changes (e.g, using `inotify`) and run scripts accordingly - e.g, to update transmission listening port.
+
 # Advanced usage
 
 ## Additional arguments for the openvpn client
@@ -48,26 +55,24 @@ Every parameter provided to the `docker run` command is directly passed as an ar
 This will run the openvpn client with the `--pull` option:
 ```Shell
 docker run ... --name=pia \
-  conlon/pia-openvpn \
+  biskyt/pia-openvpn \
     --pull
 ```
 
 ## Avoiding using environment variables for credentials
 By default this image relies on the variables `USERNAME` and `PASSWORD` to be set in order to successfully connect to the PIA VPN.
 
-It is possible to use instead a pre-existing volume/file containing the credentials. (Note the :Z for SELINUX) 
+It is possible to use instead a pre-existing volume/file containing the credentials. (Note the :Z for SELINUX)
 ```Shell
 docker run ... --name=pia \
   -e 'REGION=US East' \
   -v '/hostpath/auth.conf:/etc/openvpn/auth.conf:Z' \
-  conlon/pia-openvpn \
+  biskyt/pia-openvpn \
     --auth-user-pass auth.conf
 ```
 
 ## Connection between containers behind PIA
 Any container started with `--net=container:...` will use the same network stack as the underlying container, therefore they will share the same local IP address.
-
-[Prior to Docker 1.9](https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/) `--link=pia:mycontainer` was the recommended way to connect to a specific container.
 
 [Since Docker 1.9](https://docs.docker.com/engine/userguide/networking/dockernetworks/), it is recommended to use a non default network allowing containers to address each other by name.
 
@@ -80,7 +85,7 @@ This creates a network called `pia_network` in which containers can address each
 
 ### Start the PIA container in the pia_network
 ```Shell
-docker run ... --net=pia_network --name=pia conlon/pia-openvpn
+docker run ... --net=pia_network --name=pia biskyt/pia-openvpn
 ```
 
 In `pia_network` there is now a resolvable name `pia` that points to that newly created container.

@@ -30,6 +30,6 @@ fi
 
 
 # Add up script
-set -- "$@" '--script-security' '2' '--up' '/etc/openvpn/up.sh'
+set -- "$@" '--script-security' '2' '--up' '/etc/openvpn/up.sh' '--down' '/etc/openvpn/down.sh'
 
 openvpn "$@"
