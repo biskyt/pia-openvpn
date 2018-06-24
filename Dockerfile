@@ -14,13 +14,14 @@ RUN apk -U upgrade && \
     unzip -d /etc/openvpn/pia-standard/ /openvpn.zip && \
     #
     # cleanup temporary files
-    # rm -rf /tmp && \
+    rm -rf /tmp/* && \
     rm /openvpn.zip && \
     rm /openvpn-strong.zip && \
     rm -rf /var/cache/apk/* && \
-    mkdir /etc/openvpn/pia_portforward_output && \
-    touch /etc/openvpn/pia_portforward_output/port.txt && \
-    chmod -R 777 /etc/openvpn/pia_portforward_output
+    mkdir /portforward && \
+    touch /portforward/port.txt && \
+    chmod -R 777 /portforward
+    #echo net.ipv4.ip_forward=1 > /etc/sysctl.d/10-port-forward.conf
 
 
 COPY openvpn.sh /usr/local/bin/openvpn.sh
@@ -38,5 +39,7 @@ HEALTHCHECK --interval=60s --timeout=15s --start-period=120s \
     CMD curl -L 'https://api.ipify.org'
 
 VOLUME /portforward
+
+EXPOSE 9091
 
 ENTRYPOINT ["openvpn.sh"]

@@ -45,7 +45,10 @@ This image will automatically ask PIA for a port forward (on compatible servers)
 
 It is recommended that you create a shared volume (e.g, `docker create volume portforward`), and mount this volume in the container by specifying `-v portforward:/portforward \` in the docker run.
 
-If you mount the same volume in any other container using the PIA VPN, then you can monitor the port.txt file for changes (e.g, using `inotify`) and run scripts accordingly - e.g, to update transmission listening port.
+If you mount the same volume in any other container using the PIA VPN, then you can monitor the port.txt file for changes (e.g, using `inotify`) and run scripts accordingly - e.g, to update transmission listening port (see biskyt/transmission).
+
+## Using with transmission
+This container exposes port 9091. If a transmission container uses this pia-openvpn container as its network, then you can access the transmission webui on http://localhost:9091 (alternatively, use nginx in a third container)
 
 # Advanced usage
 
