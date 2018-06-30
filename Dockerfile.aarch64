@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM amd64/alpine:latest
 MAINTAINER biskyt
 
 RUN apk -U upgrade && \
