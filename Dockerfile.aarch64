@@ -1,4 +1,4 @@
-FROM lsiobase/alpine.arm64:3.7
+FROM arm64v8/alpine
 MAINTAINER biskyt
 
 RUN apk -U upgrade && \
