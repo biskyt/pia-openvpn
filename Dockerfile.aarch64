@@ -40,6 +40,6 @@ HEALTHCHECK --interval=60s --timeout=15s --start-period=120s \
 
 VOLUME /portforward
 
-EXPOSE 9091 8989 7878
+EXPOSE 9091 8989 7878 9117
 
 ENTRYPOINT ["openvpn.sh"]
