@@ -29,7 +29,9 @@ COPY up.sh /etc/openvpn
 COPY up2.sh /etc/openvpn
 COPY pia_portforward.sh /etc/openvpn
 COPY down.sh /etc/openvpn
-RUN chmod a+rx /etc/openvpn/*.sh
+COPY port-refresh.sh /etc/openvpn
+COPY cron.hourly/* /etc/periodic/hourly/
+RUN chmod a+rx /etc/openvpn/*.sh && chmod -R a+rx /etc/periodic/hourly/
 
 WORKDIR /etc/openvpn
 

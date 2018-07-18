@@ -29,7 +29,9 @@ COPY up.sh /etc/openvpn
 COPY up2.sh /etc/openvpn
 COPY pia_portforward.sh /etc/openvpn
 COPY down.sh /etc/openvpn
-RUN chmod a+rx /etc/openvpn/*.sh
+COPY port-refresh.sh /etc/openvpn
+COPY cron.hourly/* /etc/periodic/hourly/
+RUN chmod a+rx /etc/openvpn/*.sh && chmod -R a+rx /etc/periodic/hourly/
 
 WORKDIR /etc/openvpn
 
@@ -40,6 +42,6 @@ HEALTHCHECK --interval=60s --timeout=15s --start-period=120s \
 
 VOLUME /portforward
 
-EXPOSE 9091 8989 7878 5050 9117
+EXPOSE 9091 8989 7878 9117 5050
 
 ENTRYPOINT ["openvpn.sh"]

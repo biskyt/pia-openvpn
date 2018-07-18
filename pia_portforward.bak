@@ -5,6 +5,8 @@
 # Usage:
 #  ./port_forwarding.sh
 
+## MODIFIED BY @biskyt to remove non-JSON text in output
+
 error( )
 {
   echo "$@" 1>&2
@@ -36,22 +38,18 @@ version( )
 
 port_forward_assignment( )
 {
-  client_id_file="/portforward/pia_client_id"
-  if [ ! -f "$client_id_file" ]; then
-    if hash shasum 2>/dev/null; then
-      head -n 100 /dev/urandom | shasum -a 256 | tr -d " -" > "$client_id_file"
-    elif hash sha256sum 2>/dev/null; then
-      head -n 100 /dev/urandom | sha256sum | tr -d " -" > "$client_id_file"
-    else
-      echo "Please install shasum or sha256sum, and make sure it is visible in your \$PATH"
-      exit 1
-    fi
+  # echo 'Loading port forward assignment information...'
+  if [ "$(uname)" == "Linux" ]; then
+    client_id=`head -n 100 /dev/urandom | sha256sum | tr -d " -"`
   fi
-  client_id=`cat "$client_id_file"`
+  if [ "$(uname)" == "Darwin" ]; then
+    client_id=`head -n 100 /dev/urandom | shasum -a 256 | tr -d " -"`
+  fi
+
   json=`curl "http://209.222.18.222:2000/?client_id=$client_id" 2>/dev/null`
-  if [ "$json" == "" ]; then
-    json=''
-  fi
+   # if [ "$json" == "" ]; then
+   #   json='Port forwarding is already activated on this connection, has expired, or you are not connected to a PIA region that supports port forwarding'
+   # fi
 
   echo $json
 }
