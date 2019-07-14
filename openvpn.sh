@@ -1,10 +1,10 @@
 #!/bin/bash
-set -e -u -o pipefail
+#set -e -u -o pipefail
 
 
-[ ! -z ${STRONG_ENCRYPT} ] && path="pia-strong" || path="pia-standard"
+[ ! -z $STRONG_ENCRYPT ] && path="pia-strong" || path="pia-standard"
 
-echo "Using ${path} settings"
+echo "Using $path settings for $REGION"
 
 if [ -n "$REGION" ]; then
   # eliminate issues with whitespace in filenames
@@ -13,7 +13,7 @@ if [ -n "$REGION" ]; then
 fi
 
 sed -i "s/aes-128-cbc/aes-128-gcm/gI" config.ovpn
-sed -i "s/^auth\s/c\ /gI" config.ovpn
+sed -i "s/^auth\s.*//gI" config.ovpn
 echo "ncp-disable" >> config.ovpn
 
 cp -p ${path}/*.crt ${path}/*.pem .
