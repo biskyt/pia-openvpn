@@ -1,0 +1,36 @@
+version: '2.2'
+
+services:
+  vpn:
+    build:
+      # git clone pia-openvpn build into this directory
+      context: .
+      dockerfile: Dockerfile
+    # cap_add, security_opt, and volume required for the image to function privileged: true
+    container_name: vpn
+    cpu_shares: 1024
+    environment:
+      TZ: 'Europe/London'
+      USERNAME: ${USERNAME:?}
+      PASSWORD: ${PASSWORD:?}
+      REGION: 'Ireland'
+      LOCAL_NETWORK: '192.168.1.0/24'
+    ports:
+      - "9091:9091"
+      - "8989:8989"
+      - "9117:9117"
+      - "7878:7878"
+    tmpfs:
+      - /tmp
+    restart: 'unless-stopped'
+    security_opt:
+      - label:disable
+    stdin_open: true
+    tty: true
+    # dns:
+    #   - 209.222.18.222
+    #   - 209.222.18.218
+    # devices:                                                                                                                                                                                                          - /dev/net/tun:/dev/net/tun:rwm                                                                                                                                                                               cap_add:
+    #   - NET_ADMIN
+    labels:
+      - "autoheal=true"

@@ -1,8 +1,7 @@
 FROM alpine:latest
-MAINTAINER biskyt
 
 RUN apk -U upgrade && \
-    apk add --no-cache openvpn curl bash jq && \
+    apk add --no-cache openvpn curl bash jq sed && \
     #
     #AES256 encryption profiles
     curl -o /openvpn-strong.zip https://www.privateinternetaccess.com/openvpn/openvpn-strong.zip && \
@@ -36,12 +35,14 @@ RUN chmod a+rx /etc/openvpn/*.sh && chmod -R a+rx /etc/periodic/hourly/
 WORKDIR /etc/openvpn
 
 ENV REGION="France"
+ENV STRONG_ENCRYPT=""
 
 HEALTHCHECK --interval=60s --timeout=15s --start-period=120s \
     CMD curl -L 'https://api.ipify.org'
 
 VOLUME /portforward
 
-EXPOSE 9091 8989 7878 9117 5050
+EXPOSE 9091 9117
+# 8989 7878 9117 5050 80 443 8080
 
 ENTRYPOINT ["openvpn.sh"]
