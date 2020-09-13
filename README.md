@@ -41,7 +41,7 @@ docker run --rm --net=container:pia \
 The IP address returned after this execution should be different from the IP address you would get without specifying `--net=container:pia`.
 
 ## Port port_forwarding
-This image will automatically ask PIA for a port forward (on compatible servers) and store the port number in /portforward/port.txt.
+This image will automatically ask PIA for a port forward (on compatible servers) and store the port number in /portforward/port.dat.
 
 It is recommended that you create a shared volume (e.g, `docker create volume portforward`), and mount this volume in the container by specifying `-v portforward:/portforward \` in the docker run.
 

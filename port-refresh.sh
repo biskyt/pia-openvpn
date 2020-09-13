@@ -6,7 +6,7 @@ PORT=$(./pia_portforward.sh | jq -r '.port')
 echo Port forwarding on $PORT
 if [ "$json" == "" ]; then
     echo Port forwarding on $PORT
-    echo $PORT > /portforward/port.txt
+    echo $PORT > /portforward/port.dat
 else
     echo Port Forward failed to retrieve a port
     exit 1
